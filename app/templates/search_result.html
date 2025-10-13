@@ -1,0 +1,71 @@
+{% if isLoggedIn %}
+    {% extends 'base/header_footer_loggedin.html' %}
+{% else %}
+    {% extends 'base/header_footer.html' %}
+{% endif %}
+
+{% block page_title %}Search Results{% endblock page_title %}
+
+{% set page_style = 'styles/search-result.css' %}
+{% set page_script = 'scripts/search-result.js' %}
+
+{% block content %}
+<!-- Search Results Section -->
+<div class="container mt-4">
+    <h2>Search Results (<span id="results-count">0</span>)</h2>
+
+    <div class="accordion" id="search-results-accordion">
+        <!-- Movies Section -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingMovies">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMovies" aria-expanded="true" aria-controls="collapseMovies">
+                    Movies (<span id="movies-count">0</span>)
+                </button>
+            </h2>
+            <div id="collapseMovies" class="accordion-collapse collapse show" aria-labelledby="headingMovies" data-bs-parent="#search-results-accordion">
+                <div class="accordion-body">
+                    <div id="movies-results" class="row">
+                        <!-- Movies results will be appended here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Events Section -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingEvents">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEvents" aria-expanded="false" aria-controls="collapseEvents">
+                    Events (<span id="events-count">0</span>)
+                </button>
+            </h2>
+            <div id="collapseEvents" class="accordion-collapse collapse" aria-labelledby="headingEvents" data-bs-parent="#search-results-accordion">
+                <div class="accordion-body">
+                    <div id="events-results" class="row">
+                        <!-- Events results will be appended here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shows Section -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingShows">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseShows" aria-expanded="false" aria-controls="collapseShows">
+                    Shows (<span id="shows-count">0</span>)
+                </button>
+            </h2>
+            <div id="collapseShows" class="accordion-collapse collapse" aria-labelledby="headingShows" data-bs-parent="#search-results-accordion">
+                <div class="accordion-body">
+                    <div id="shows-results" class="row">
+                        <!-- Shows results will be appended here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename=page_script) }}"></script>
+{% endblock extra_scripts %}

@@ -1,0 +1,37 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.container {
+    margin-top: 30px;
+}
+
+.seat {
+    width: 100%;  /* Button size to fill the table cell */
+    height: 30px;  /* Reduced height */
+    font-size: 14px;  /* Text size */
+    display: inline-flex;  /* Align text centrally */
+    align-items: center;
+    justify-content: center;
+    margin: 0;  /* Remove margin for button */
+    text-align: center;
+    line-height: 1;  /* Vertically align text */
+    padding: 0;  /* Remove padding for button */
+    border-width: 1px;  /* Reduce border width */
+}
+
+.table {
+    max-width: 600px;  /* Adjust to fit 10 columns */
+    margin: 0 auto;  /* Center align the table */
+}
+
+.table-borderless td, .table-borderless th {
+    border: 0;  /* Make table borders invisible */
+    padding: 2px;  /* Decrease padding between cells */
+}
+
+.btn-check:checked + .btn {
+    background-color: #28a745;
+    color: white;
+    border-color: #28a745; /* Match border color */
+}

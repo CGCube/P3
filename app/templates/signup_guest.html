@@ -1,0 +1,58 @@
+{% extends 'base/signin_base.html' %}
+
+{% block page_title %}Sign Up - Guest{% endblock page_title %}
+
+{% set stylesheet_file = 'styles/signup-guest.css' %}
+{% set script_file = 'scripts/signup-guest.js' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="signup-container col-md-8 col-lg-6">
+                <div class="col-12 col-md-6">
+                    <h2>Sign Up</h2>
+                    <form action="/submit_signup_guest" method="POST" id="signupForm">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="gname" name="gname" placeholder="Name" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="email" class="form-control" id="gemail" name="gemail" placeholder="Email" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="gusername" name="gusername" placeholder="Username" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" class="form-control" id="gpassword" name="gpassword" placeholder="Password" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" class="form-control" id="gconfirm_password" name="gconfirm_password" placeholder="Confirm Password" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="gphone" name="gphone" placeholder="Phone">
+                        </div>
+                        <!-- New dropdown for location -->
+                        <div class="mb-3">
+                            <label for="glocation" class="form-label">Location</label>
+                            <select class="form-control" id="glocation" name="glocation" required>
+                                <option value="" disabled selected>Select your location</option>
+                                <option value="Mumbai">Mumbai</option>
+                                <option value="Pune">Pune</option>
+                                <option value="Delhi">Delhi</option>
+                                <option value="Hyderabad">Hyderabad</option>
+                                <option value="Chennai">Chennai</option>
+                                <option value="Kolkata">Kolkata</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-secondary">Sign Up</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="/login" class="su-link">Already have an account? Login</a>
+                    </div>
+                </div>
+                <div class="col-md-6 d-none d-md-block">
+                    <img src="{{ url_for('static', filename='images/signup-guest.jpeg') }}" alt="Sign Up Image" class="signup-image">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

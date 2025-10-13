@@ -1,0 +1,56 @@
+/* Basic styling for the profile organizer page */
+
+.container {
+    margin-top: 20px;
+}
+
+.card {
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.custom-btn {
+    margin-right: 10px;
+}
+
+textarea[readonly] {
+    background-color: #e9ecef;
+    opacity: 1;
+}
+
+.nav-link.active {
+    font-weight: bold;
+}
+
+.sticky-sidebar {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 20px; /* Adjust this value as needed */
+    height: calc(100vh - 20px); /* Adjust height to fit the screen */
+    overflow-y: auto; /* Add scroll if content overflows */
+}
+
+@media (max-width: 767px) {
+    .sticky-sidebar {
+        position: static;
+        margin-bottom: 20px;
+    }
+}
+
+.sticky-sidebar .card {
+    margin-bottom: 20px;
+}
+
+.bi-pencil-square, .bi-trash, .bi-bar-chart-fill {
+    cursor: pointer;
+    color: #007bff;
+}
+
+.bi-pencil-square:hover, .bi-trash:hover, .bi-bar-chart-fill:hover {
+    color: #0056b3;
+}

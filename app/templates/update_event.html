@@ -1,0 +1,65 @@
+{% extends 'base/header_footer_loggedin.html' %}
+
+{% block page_title %}Update an Event{% endblock page_title %}
+
+{% set page_style = 'styles/update-event.css' %} <!-- Dynamically set the CSS file for account page -->
+{% set page_script = 'scripts/update-event.js' %} <!-- Dynamically set the JS file for account page -->
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Update Event</h1>
+    <form id="update-event-form" class="mt-4">
+        <div class="form-group">
+            <label for="event-name">Event Name</label>
+            <input type="text" class="form-control" id="event-name">
+        </div>
+        <div class="form-group">
+            <label for="event-type">Event Type</label>
+            <select class="form-control" id="event-type">
+                <option value="" disabled selected>Select Type</option>
+                <option value="movie">Movie</option>
+                <option value="event">Event</option>
+                <option value="show">Show</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="event-date">Event Date</label>
+            <input type="date" class="form-control" id="event-date">
+        </div>
+        <div class="form-group">
+            <label for="event-time">Event Time</label>
+            <input type="time" class="form-control" id="event-time">
+        </div>
+        <div class="form-group">
+            <label for="venue">Venue</label>
+            <input type="text" class="form-control" id="venue">
+        </div>
+        <div class="form-group">
+            <label for="city">City</label>
+            <select class="form-control" id="city">
+                <option value="" disabled selected>Select City</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Pune">Pune</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="Chennai">Chennai</option>
+                <option value="Kolkata">Kolkata</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="price-per-seat">Price Per Seat (₹)</label>
+            <input type="number" class="form-control" id="price-per-seat" min="1">
+        </div>
+        <div class="form-group">
+            <label for="genre">Genre</label>
+            <input type="text" class="form-control" id="genre">
+        </div>
+        <div class="form-group">
+            <label for="thumbnail">Thumbnail</label>
+            <input type="file" class="form-control-file" id="thumbnail">
+        </div>
+        <div id="genres-container"></div>
+        <button type="submit" class="btn btn-primary">Update Event</button>
+    </form>
+</div>
+{% endblock content %}

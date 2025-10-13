@@ -1,0 +1,46 @@
+{% extends 'base/signin_base.html' %}
+
+{% block page_title %}Login{% endblock page_title %}
+
+{% set stylesheet_file = 'styles/login.css' %}
+{% set script_file = 'scripts/login.js' %}
+
+{% block content %}
+    <div class="container">
+        <div class="login-container d-flex flex-column flex-md-row">
+            <!-- Image Column (Visible only on Desktop) -->
+            <div class="col-md-6 d-none d-md-block">
+                <img src="{{ url_for('static', filename='images/login-img.jpeg') }}" height="400" alt="Login Image" class="login-image">
+            </div>
+            <!-- Form Column -->
+            <div class="col-md-6">
+                <form action="/submit_login" method="POST" id="loginForm">
+                    <!-- Heading and Dropdown beside each other -->
+                    <div class="login-header mb-3">
+                        <h2 class="me-3">Login</h2>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle mt-1" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                              Login As
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <li><a class="dropdown-item" href="#" data-value="Guest">Guest</a></li>
+                              <li><a class="dropdown-item" href="#" data-value="Organizer">Organizer</a></li>
+                            </ul>
+                            <input type="hidden" id="dropdownSelection" name="user_type" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 pt-3">
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-secondary mt-4">Login</button>
+                </form>
+                <div class="text-center mt-3">
+                    <a href="/signup_select" class="su-link">Don't have an account? Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

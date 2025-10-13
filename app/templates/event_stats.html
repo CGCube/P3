@@ -1,0 +1,35 @@
+{% extends 'base/header_footer_loggedin.html' %}
+
+{% block page_title %}Event Statistics{% endblock page_title %}
+
+{% set page_style = 'styles/event-stats.css' %} <!-- Dynamically set the CSS file for event stats page -->
+{% set page_script = 'scripts/event-stats.js' %} <!-- Dynamically set the JS file for event stats page -->
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Event Statistics</h1>
+    <div id="stats-container" class="mt-4">
+        <h2 id="event-name"></h2>
+        <p id="tickets-booked"></p>
+        <div id="video-container">
+            <!-- AI Generated Video will be inserted here -->
+        </div>
+        <h3>Reviews</h3>
+        <div id="reviews-container">
+            <!-- Event reviews will be dynamically inserted here -->
+        </div>
+        <h3>Booked Tickets</h3>
+        <table id="booked-tickets-table" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Guest Name</th>
+                    <th>Number of Tickets</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Ticket booking details will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %}

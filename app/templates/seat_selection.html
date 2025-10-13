@@ -1,0 +1,36 @@
+{% if isLoggedIn %}
+    {% extends 'base/header_footer_loggedin.html' %}
+{% else %}
+    {% extends 'base/header_footer.html' %}
+{% endif %}
+
+{% block page_title %}Seat Selection{% endblock page_title %}
+
+{% set page_style = 'styles/seat-selection.css' %}
+{% set page_script = 'scripts/seat-selection.js' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Select Your Seat</h1>
+    <form action="{{ url_for('select_seats') }}" method="POST" id="seatForm">
+        <input type="hidden" id="event_id" name="event_id" value="{{ event_id }}">
+        <input type="hidden" id="guest_id" name="guest_id" value="{{ guest_id }}">
+        <div class="seat-grid">
+            <table class="table table-borderless text-center">
+                {% for row in seat_labels %}
+                    <tr>
+                        {% for seat in row %}
+                            <td>
+                                <input type="checkbox" id="{{ seat }}" name="seats" value="{{ seat }}" class="btn-check" {% if seat in booked_seat_numbers %} checked disabled {% endif %}>
+                                <label class="btn btn-outline-primary seat {% if seat in booked_seat_numbers %} bg-secondary text-white border-secondary {% endif %}" for="{{ seat }}">{{ seat }}</label>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <button type="submit" class="btn btn-success mt-4" id="confirmButton">Submit Selected Seats</button>
+    </form>
+    <script id="bookedSeatsData" type="application/json">{{ booked_seat_numbers|default([])|tojson|safe }}</script>
+</div>
+{% endblock content %}

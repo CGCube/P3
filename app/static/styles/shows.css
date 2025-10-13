@@ -1,0 +1,35 @@
+.search-box {
+    width: 350px;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+.navbar-toggler {
+    border-color: white; /* Changes the border color of the hamburger menu to white */
+}
+
+.navbar-toggler:active {
+    border-color: white; 
+    box-shadow: 0 0 0 0.2rem #fff;
+    outline: none;
+}
+
+.navbar-toggler:focus {
+    border-color: white; 
+    box-shadow: 0 0 0 0.2rem #fff;
+    outline: none;
+}
+
+.dropdown-menu .dropdown-item:active,
+.dropdown-menu .dropdown-item:focus {
+    background-color: #6c757d; 
+    color: #fff;
+}
+
+#loading {
+    margin: 20px 0;
+    font-size: 18px;
+    color: #343a40;
+}

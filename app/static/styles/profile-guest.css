@@ -1,0 +1,72 @@
+body {
+    background-color: #f8f9fa;
+}
+
+/* Flexbox layout for the row */
+.row {
+    display: flex; /* Use flexbox for alignment */
+}
+
+/* Sticky sidebar */
+.sticky-sidebar {
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 20px; /* Offset from the top */
+    height: calc(100vh - 20px); /* Full height minus the top offset */
+    overflow-y: auto; /* Enable scrolling if content exceeds the height */
+}
+
+/* Remove top margin from container */
+.container {
+    margin-top: 0; /* Remove default margin */
+}
+
+/* Styling for cards */
+.card {
+    border-radius: 10px;
+    margin-bottom: 20px; /* Maintain margin between sections */
+}
+
+/* Card title styling */
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+/* Sidebar navigation links */
+.nav-link {
+    font-size: 1rem;
+    color: #333;
+    transition: color 0.2s ease;
+}
+
+/* Active link styling */
+.nav-link.active {
+    color: #007bff;
+    font-weight: bold;
+}
+
+/* Custom button class */
+.custom-btn {
+    margin-top: 10px; /* Custom margin for buttons */
+}
+
+/* Main content section without additional margin */
+.col-md-9 {
+    margin-left: 0; /* Ensure it aligns properly without extra margin */
+}
+
+/* Section spacing - Adjust margin to separate sections */
+#profile-section, #settings-section, #order-history-section {
+    margin-top: 0; /* Remove margin for proper alignment */
+}
+
+/* Smooth scroll behavior */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Navbar margin adjustment */
+.navbar {
+    margin-bottom: 0; /* Remove bottom margin from navbar */
+}

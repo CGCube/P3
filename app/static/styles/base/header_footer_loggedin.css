@@ -1,0 +1,34 @@
+/* Secondary Navbar Custom Styles */
+.secondary-navbar {
+    background-color: #343a40; /* Dark background */
+    height: 40px; /* Set navbar height */
+}
+
+.secondary-navbar .container-fluid {
+    padding: 0; /* Remove default padding */
+}
+
+.secondary-navbar .d-flex {
+    display: flex; /* Flexbox layout */
+    align-items: center; /* Vertically center content */
+    justify-content: center; /* Center items horizontally */
+    height: 100%; /* Full height of the navbar */
+    gap: 30px; /* Increase gap between buttons */
+}
+
+.secondary-navbar .nav-link {
+    color: white; /* White text */
+    padding: 0 10px; /* Horizontal padding */
+    text-decoration: none; /* Remove underline */
+    font-size: 16px; /* Font size */
+}
+
+.secondary-navbar .nav-link:hover {
+    background-color: #495057; /* Darker background on hover */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.navbar-dark .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30' width='30' height='30'%3E%3Cpath stroke='white' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}

@@ -1,0 +1,86 @@
+{% extends 'base/header_footer_loggedin.html' %}
+
+{% block page_title %}Add an Event{% endblock page_title %}
+
+{% set page_style = 'styles/add-event.css' %} <!-- Dynamically set the CSS file for account page -->
+{% set page_script = 'scripts/add-event.js' %} <!-- Dynamically set the JS file for account page -->
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Add New Event</h1>
+    <form id="add-event-form" class="mt-4">
+        <input type="hidden" id="organizer-id" value="{{ organizer_id }}">
+        <input type="hidden" id="available-seats" value="200"> <!-- Hidden field for available seats -->
+        <div class="form-group">
+            <label for="event-name">Event Name</label>
+            <input type="text" class="form-control" id="event-name" required>
+        </div>
+        <div class="form-group">
+            <label for="event-type">Event Type</label>
+            <select class="form-control" id="event-type" required>
+                <option value="" disabled selected>Select Type</option>
+                <option value="movie">Movie</option>
+                <option value="event">Event</option>
+                <option value="show">Show</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="event-date">Event Date</label>
+            <input type="date" class="form-control" id="event-date" required>
+        </div>
+        <div class="form-group">
+            <label for="event-time">Event Time</label>
+            <input type="time" class="form-control" id="event-time" required>
+        </div>
+        <div class="form-group">
+            <label for="venue">Venue</label>
+            <input type="text" class="form-control" id="venue" required>
+        </div>
+        <div class="form-group">
+            <label for="city">City</label>
+            <select class="form-control" id="city" required>
+                <option value="" disabled selected>Select City</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Pune">Pune</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="Chennai">Chennai</option>
+                <option value="Kolkata">Kolkata</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="price-per-seat">Price Per Seat (₹)</label>
+            <input type="number" class="form-control" id="price-per-seat" min="1" required>
+        </div>
+        <div class="form-group">
+            <label for="genre">Genre</label>
+            <select class="form-control" id="genre" required>
+                <option value="" disabled selected>Select Genre</option>
+                <option value="Action">Action</option>
+                <option value="Adventure">Adventure</option>
+                <option value="Comedy">Comedy</option>
+                <option value="Crime and mystery">Crime and mystery</option>
+                <option value="Fantasy">Fantasy</option>
+                <option value="Historical">Historical</option>
+                <option value="Historical fiction">Historical fiction</option>
+                <option value="Horror">Horror</option>
+                <option value="Romance">Romance</option>
+                <option value="Satire">Satire</option>
+                <option value="Science fiction">Science fiction</option>
+                <option value="Cyberpunk and derivatives">Cyberpunk and derivatives</option>
+                <option value="Speculative">Speculative</option>
+                <option value="Thriller">Thriller</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="thumbnail">Thumbnail URL</label>
+            <input type="text" class="form-control" id="thumbnail" required>
+        </div>
+        <div class="form-group">
+            <label for="event-description">Event Description</label>
+            <textarea class="form-control" id="event-description" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Event</button>
+    </form>
+</div>
+{% endblock content %}

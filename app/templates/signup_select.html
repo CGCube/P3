@@ -1,0 +1,26 @@
+{% extends 'base/signin_base.html' %}
+
+{% block page_title %}Sign Up{% endblock page_title %}
+
+{% set stylesheet_file = 'styles/signup-select.css' %}
+{% set script_file = 'styles/signup-select.js' %}
+
+{% block content %}
+    <div class="container d-flex justify-content-center align-items-center">
+        <div class="option-container">
+            <h1>Sign Up as</h1>
+            <div class="row">
+                <!-- Guest Option -->
+                <div class="col-md-6 d-flex flex-column align-items-center">
+                    <img src="{{ url_for('static', filename='images/signin-image.jpg') }}" alt="Guest Image" class="image-option ">
+                    <a href="/signup_guest" class="btn btn-primary btn-option">Guest</a>
+                </div>
+                <!-- Organizer Option -->
+                <div class="col-md-6 d-flex flex-column align-items-center">
+                    <img src="{{ url_for('static', filename='images/signup-organizer.jpg') }}" alt="Organizer Image" class="image-option  ">
+                    <a href="/signup_organizer" class="btn btn-primary btn-option">Organizer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

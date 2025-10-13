@@ -1,0 +1,159 @@
+import requests
+import mysql.connector
+from datetime import datetime, timedelta
+import random
+
+# Configuration
+TMDB_API_KEY = 'a59b7e2451a75b9cf11363816cc0a8cd'
+
+# Database configuration
+db_config = {
+    'user': 'root',
+    'password': '123456',
+    'host': '127.0.0.1',
+    'database': 'eventnova'
+}
+
+# Genres to exclude
+EXCLUDED_GENRE_IDS = {27, 80, 53}  # Horror, Murder, Thriller genre IDs
+
+# Languages to include
+INCLUDED_LANGUAGES = {'hi', 'en', 'te', 'mr'}
+
+# List of cities from home.html
+CITIES = ["Mumbai", "Delhi", "Bangalore", "Hyderabad", "Ahmedabad", "Chennai", "Kolkata", "Surat", "Pune", "Jaipur"]
+
+# List of random venues
+VENUES = [
+    "Town Hall Auditorium",
+    "City Center Plaza",
+    "Grand Convention Center",
+    "Metropolitan Theatre",
+    "Downtown Event Hall",
+    "Suburban Community Center",
+    "Riverside Pavilion",
+    "Uptown Banquet Hall",
+    "Central Park Amphitheater",
+    "Harborview Conference Room"
+]
+
+# Fetch popular movies or shows from TMDB
+def fetch_popular(type, api_key, page):
+    url = f'https://api.themoviedb.org/3/{type}/popular?api_key={api_key}&region=IN&include_adult=false&page={page}'
+    response = requests.get(url)
+    response.raise_for_status()
+    return response.json()
+
+# Fetch genres from TMDB
+def fetch_genres(api_key, type):
+    url = f'https://api.themoviedb.org/3/genre/{type}/list?api_key={api_key}&language=en-US'
+    response = requests.get(url)
+    response.raise_for_status()
+    return response.json()['genres']
+
+# Filter the data based on the criteria
+def filter_data(items):
+    return [
+        item for item in items
+        if not any(genre_id in EXCLUDED_GENRE_IDS for genre_id in item['genre_ids'])
+        and item['original_language'] in INCLUDED_LANGUAGES
+        and item['genre_ids']  # Ensure genre is described
+    ]
+
+# Generate a random date and time
+def generate_random_datetime():
+    # Random date within the next year
+    start_date = datetime.now()
+    end_date = start_date + timedelta(days=365)
+    random_date = start_date + (end_date - start_date) * random.random()
+
+    # Random time with 15-minute intervals
+    random_minute = random.choice(range(0, 60, 15))
+    random_time = random_date.replace(hour=random.randint(0, 23), minute=random_minute, second=0, microsecond=0)
+    
+    return random_time.date(), random_time.time()
+
+# Generate a random price
+def generate_random_price():
+    return random.choice(range(25, 105, 5))
+
+# Insert data into the database
+def insert_data(cursor, items, type, genres_dict, organizer_id):
+    for item in items:
+        title = item['title'] if type == 'movie' else item['name']
+        description = item['overview']
+        image_url = f"https://image.tmdb.org/t/p/w500{item['poster_path']}"
+        event_date, event_time = generate_random_datetime()
+        venue = random.choice(VENUES)
+        city = random.choice(CITIES)
+        genre_ids = item['genre_ids']
+        genre = ', '.join([genres_dict[genre_id] for genre_id in genre_ids if genre_id in genres_dict])
+        price = generate_random_price()
+        available_seats = 200
+        event_description = item['overview']  # Assuming the overview can be used as the event description
+
+        cursor.execute('''
+            INSERT INTO events (organizer_id, event_name, event_thumbnail, event_type, genre, date, time, venue, city, price, available_seats, event_description)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        ''', (
+            organizer_id,
+            title,
+            image_url,
+            type,
+            genre,
+            event_date,
+            event_time,
+            venue,
+            city,
+            price,
+            available_seats,
+            event_description
+        ))
+
+# Main function to orchestrate the import
+def main():
+    conn = mysql.connector.connect(
+        user=db_config['user'],
+        password=db_config['password'],
+        host=db_config['host'],
+        database=db_config['database']
+    )
+    cursor = conn.cursor()
+
+    all_movies = []
+    all_shows = []
+
+    # Fetch movie genres
+    movie_genres = fetch_genres(TMDB_API_KEY, 'movie')
+    movie_genres_dict = {genre['id']: genre['name'] for genre in movie_genres}
+
+    # Fetch show genres
+    show_genres = fetch_genres(TMDB_API_KEY, 'tv')
+    show_genres_dict = {genre['id']: genre['name'] for genre in show_genres}
+
+    # Fetch and filter movies until we have at least 100
+    page = 1
+    while len(all_movies) < 100:
+        movies = fetch_popular('movie', TMDB_API_KEY, page)
+        all_movies.extend(filter_data(movies['results']))
+        page += 1
+    
+    # Fetch and filter shows until we have at least 100
+    page = 1
+    while len(all_shows) < 100:
+        shows = fetch_popular('tv', TMDB_API_KEY, page)
+        all_shows.extend(filter_data(shows['results']))
+        page += 1
+
+    # Insert movies into the database
+    insert_data(cursor, all_movies[:100], 'movie', movie_genres_dict, 1)  # Assuming organizer_id is 1
+
+    # Insert shows into the database
+    insert_data(cursor, all_shows[:100], 'show', show_genres_dict, 1)  # Assuming organizer_id is 1
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+if __name__ == "__main__":
+    main()

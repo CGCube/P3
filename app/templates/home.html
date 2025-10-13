@@ -1,0 +1,98 @@
+{% if isLoggedIn %}
+    {% extends 'base/header_footer_loggedin.html' %}
+{% else %}
+    {% extends 'base/header_footer.html' %}
+{% endif %}
+
+{% block page_title %}EventNova{% endblock page_title %}
+
+{% set page_style = 'styles/home.css' %} <!-- Dynamically set the CSS file -->
+{% set page_script = 'scripts/home.js' %} <!-- Dynamically set the JS file -->
+
+{% block content %}
+    <div class="container mt-4">
+        <!-- Trending Movies Section -->
+        {% if trending %}
+        <div class="row mb-4">
+            <div class="col">
+                <h2 class="d-inline">Now Trending</h2>
+                <hr class="d-inline" style="width: 50px; height: 2px; background-color: #343a40; border: none;">
+            </div>
+        </div>
+        <div class="row" id="trending-cards">
+            {% for trending in trending %}
+                <div class="col-md-3">
+                    <div class="card mb-4 trending-card">
+                        <img src="{{ trending.thumbnail }}" class="card-img-top" alt="{{ trending.name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ trending.name }}</h5>
+                            <p class="card-text">{{ trending.description }}</p>
+                            <a href="/view_description?event_id={{ trending.event_id }}" class="btn" style="background-color: #212529; color: white;">Book Ticket</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if isLoggedIn and recommendations %}
+        <!-- Recommended Movies Section -->
+        <div class="row mb-4">
+            <div class="col">
+                <h2 class="d-inline">Recommended for You</h2>
+                <hr class="d-inline" style="width: 50px; height: 2px; background-color: #343a40; border: none;">
+            </div>
+        </div>
+        <div class="row" id="recommended-cards">
+            {% for recommended in recommendations %}
+                <div class="col-md-3">
+                    <div class="card mb-4 recommended-card">
+                        <img src="{{ recommended.thumbnail }}" class="card-img-top" alt="{{ recommended.name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ recommended.name }}</h5>
+                            <p class="card-text">{{ recommended.description }}</p>
+                            <a href="/view_description?event_id={{ recommended.event_id }}" class="btn" style="background-color: #212529; color: white;">Book Ticket</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Shows Section -->
+        <div class="row mb-4">
+            <div class="col">
+                <h2 class="d-inline">Shows</h2>
+                <hr class="d-inline" style="width: 50px; height: 2px; background-color: #343a40; border: none;">
+                <a href="/shows" class="float-end" style="color: #343a40;">Show All</a>
+            </div>
+        </div>
+        <div class="row" id="show-cards">
+            <!-- Show items will be appended here by JavaScript -->
+        </div>
+
+        <!-- Events Section -->
+        <div class="row mb-4">
+            <div class="col">
+                <h2 class="d-inline">Events</h2>
+                <hr class="d-inline" style="width: 50px; height: 2px; background-color: #343a40; border: none;">
+                <a href="/events" class="float-end" style="color: #343a40;">Show All</a>
+            </div>
+        </div>
+        <div class="row" id="event-cards">
+            <!-- Event items will be appended here by JavaScript -->
+        </div>
+
+        <!-- Movies Section -->
+        <div class="row mb-4">
+            <div class="col">
+                <h2 class="d-inline">Movies</h2>
+                <hr class="d-inline" style="width: 50px; height: 2px; background-color: #343a40; border: none;">
+                <a href="/movies" class="float-end" style="color: #343a40;">Show All</a>
+            </div>
+        </div>
+        <div class="row" id="movie-cards">
+            <!-- Movie items will be appended here by JavaScript -->
+        </div>
+    </div>
+{% endblock %}

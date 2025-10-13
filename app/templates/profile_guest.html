@@ -1,0 +1,116 @@
+{% extends 'base/header_footer_loggedin.html' %}
+
+{% block page_title %}My Account{% endblock page_title %}
+
+{% set page_style = 'styles/profile-guest.css' %} <!-- Dynamically set the CSS file for account page -->
+{% set page_script = 'scripts/profile-guest.js' %} <!-- Dynamically set the JS file for account page -->
+
+{% block content %}
+
+<div class="container my-0 mt-3"> <!-- Adjusted my-5 to my-0 -->
+    <div class="row">
+        <!-- Sidebar for Account Options -->
+        <div class="col-md-3 sticky-sidebar d-none d-md-block">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-center">My Account</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#profile-section">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#settings-section">Settings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#booking-history-section">Booking History</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout" id="logoutBtn">Log Out</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Account Content -->
+        <div class="col-md-9">
+            <div class="card shadow-sm mb-4" id="profile-section">
+                <div class="card-body">
+                    <h5 class="card-title">Profile Information</h5>
+                    <form id="profile-form">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="name" name="name" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="guest-id" class="form-label">Guest ID</label>
+                            <input type="text" class="form-control" id="guest-id" name="guest_id" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="text" class="form-control" id="phone" name="phone" readonly>
+                        </div>
+                        <!-- New field for location -->
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Location</label>
+                            <select class="form-control" id="location" name="location" disabled>
+                                <option value="" disabled>Select your location</option>
+                                <option value="Mumbai">Mumbai</option>
+                                <option value="Pune">Pune</option>
+                                <option value="Delhi">Delhi</option>
+                                <option value="Hyderabad">Hyderabad</option>
+                                <option value="Chennai">Chennai</option>
+                                <option value="Kolkata">Kolkata</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-outline-primary custom-btn" id="editProfileBtn">Edit Profile</button>
+                        <button type="submit" class="btn btn-primary custom-btn" id="submitProfileBtn" style="display:none;">Save</button>
+                        <button type="button" class="btn btn-outline-secondary custom-btn" id="cancelEditProfileBtn" style="display:none;">Cancel</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4" id="settings-section">
+                <div class="card-body">
+                    <h5 class="card-title">Account Settings</h5>
+                    <form id="change-password-form">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="current-password" class="form-label">Current Password</label>
+                            <input type="password" class="form-control" id="current-password" name="current_password" readonly>
+                        </div>
+                        <div id="new-password-fields" class="mb-3" style="display:none;">
+                            <label for="new-password" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="new-password" name="new_password">
+                        </div>
+                        <div id="confirm-password-fields" class="mb-3" style="display:none;">
+                            <label for="confirm-password" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirm-password" name="confirm_password">
+                        </div>
+                        <button type="button" class="btn btn-outline-warning custom-btn" id="changePasswordBtn">Change Password</button>
+                        <button type="submit" class="btn btn-primary custom-btn" style="display:none;" id="submitPasswordBtn">Submit</button>
+                        <button type="button" class="btn btn-outline-secondary custom-btn" id="cancelChangePasswordBtn" style="display:none;">Cancel</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4" id="booking-history-section">
+                <div class="card-body">
+                    <h5 class="card-title">Booking History</h5>
+                    <ul class="list-group" id="booking-history-list">
+                        <!-- Booking history items will be dynamically populated here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

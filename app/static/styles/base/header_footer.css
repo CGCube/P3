@@ -1,0 +1,30 @@
+/* Secondary Navbar Custom Styles */
+.secondary-navbar {
+    background-color: #343a40; /* Dark background */
+    height: 40px; /* Set navbar height */
+}
+
+.secondary-navbar .container-fluid {
+    padding: 0; /* Remove default padding */
+}
+
+.secondary-navbar .d-flex {
+    display: flex; /* Flexbox layout */
+    align-items: center; /* Vertically center content */
+    justify-content: center; /* Center items horizontally */
+    height: 100%; /* Full height of the navbar */
+    gap: 30px; /* Increase gap between buttons */
+}
+
+.secondary-navbar .nav-link {
+    color: white; /* White text */
+    padding: 0 10px; /* Horizontal padding */
+    text-decoration: none; /* Remove underline */
+    font-size: 16px; /* Font size */
+}
+
+.secondary-navbar .nav-link:hover {
+    background-color: #495057; /* Darker background on hover */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s ease; /* Smooth transition */
+}

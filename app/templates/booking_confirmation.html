@@ -1,0 +1,36 @@
+{% if isLoggedIn %}
+    {% extends 'base/header_footer_loggedin.html' %}
+{% else %}
+    {% extends 'base/header_footer.html' %}
+{% endif %}
+
+{% block page_title %}Booking Confirmation{% endblock page_title %}
+
+{% set page_style = 'styles/booking-confirmation.css' %}
+{% set page_script = 'scripts/booking-confirmation.js' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Booking Confirmation</h1>
+    <table class="table table-bordered mt-4">
+        <tr>
+            <th class="text-center">Seats</th>
+            <td class="text-center" id="seats">{{ seats }}</td>
+        </tr>
+        <tr>
+            <th class="text-center">Price per Seat</th>
+            <td class="text-center" id="price_per_seat">{{ price_per_seat }}</td>
+        </tr>
+        <tr>
+            <th class="text-center">Total Amount</th>
+            <td class="text-center" id="total_amount">{{ total_amount }}</td>
+        </tr>
+    </table>
+    <form id="payment-form">
+        <div id="card-element"><!-- Stripe.js injects the Card Element here --></div>
+        <button class="btn btn-primary mt-4" id="sendPayment">Send Payment Details</button>
+        <div id="card-errors" role="alert"></div>
+    </form>
+</div>
+<script src="https://js.stripe.com/v3/"></script> <!-- Added Stripe.js -->
+{% endblock content %}

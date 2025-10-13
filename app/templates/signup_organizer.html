@@ -1,0 +1,44 @@
+{% extends 'base/signin_base.html' %}
+
+{% block page_title %}Sign Up - Organizer{% endblock page_title %}
+
+{% set stylesheet_file = 'styles/signup-organizer.css' %}
+{% set script_file = 'scripts/signup-organizer.js' %}
+
+{% block content %}
+    <div class="container">
+        <div class="signup-container">
+            <div class="signup-form">
+                <h2>Organizer Sign Up</h2>
+                <form action="/submit_signup_organizer" method="POST" id="signupForm">
+                    <div class="mb-3 pt-4">
+                        <input type="text" class="form-control" id="oname" name="oname" placeholder="Name" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="email" class="form-control" id="oemail" name="oemail" placeholder="Email" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="ousername" name="ousername" placeholder="Username" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" id="opassword" name="opassword" placeholder="Password" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" id="oconfirm_password" name="oconfirm_password" placeholder="Confirm Password" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="ophone" name="ophone" placeholder="Phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <textarea class="form-control" id="odescription" name="odescription" placeholder="Brief Introduction (Optional)" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">Sign Up</button>
+                </form>
+                <div class="text-center mt-3">
+                    <a href="/login" class="su-link">Already have an account? Login</a>
+                </div>
+            </div>
+            <img src="{{ url_for('static', filename='images/signup-organizer.jpg') }}" alt="Sign Up Image">
+        </div>
+    </div>
+{% endblock %}
