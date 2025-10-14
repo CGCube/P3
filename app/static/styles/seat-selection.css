@@ -35,3 +35,14 @@ body {
     color: white;
     border-color: #28a745; /* Match border color */
 }
+
+.screen-indicator {
+    font-size: 0.95rem;
+    color: #6c757d;
+    border-top: 2px solid #ccc;
+    width: 60%;
+    margin: 0 auto;
+    padding-top: 6px;
+    font-style: italic;
+    letter-spacing: 0.5px;
+}

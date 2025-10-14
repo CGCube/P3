@@ -12,6 +12,14 @@
 {% block content %}
 <div class="container mt-5">
     <h1 class="text-center">Select Your Seat</h1>
+
+    <!-- Simple "Screen This Side" indicator -->
+    <div class="text-center mb-3">
+        <div class="screen-indicator">
+            Screen This Side
+        </div>
+    </div>
+
     <form action="{{ url_for('select_seats') }}" method="POST" id="seatForm">
         <input type="hidden" id="event_id" name="event_id" value="{{ event_id }}">
         <input type="hidden" id="guest_id" name="guest_id" value="{{ guest_id }}">

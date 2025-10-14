@@ -245,41 +245,7 @@ def init_routes(app):
 
         return render_template('seat_selection.html', isLoggedIn=True, event_id=event_id, guest_id=guest_id, booked_seat_numbers=booked_seat_numbers, seat_labels=seat_labels, selected_seats=selected_seats)
 
-    @app.route('/event_stats')
-    def event_stats():
-        if not isLoggedIn or UserType != "organizer":
-            return redirect(url_for('login'))
-
-        event_id = request.args.get('event_id')
-        event = Event.query.get(event_id)
-
-        if not event:
-            return "Event not found", 404
-
-        return render_template('event_stats.html', event=event)
-
-    @app.route('/api/event_stats')
-    def api_event_stats():
-        if not isLoggedIn or UserType != "organizer":
-            return jsonify({"success": False, "message": "User not logged in or not an organizer"})
-
-        event_id = request.args.get('event_id')
-        event = Event.query.get(event_id)
-
-        if not event:
-            return jsonify({"success": False, "message": "Event not found"})
-
-        reviews = Review.query.filter_by(event_id=event_id).all()
-        bookings = db.session.query(Guest.gname, Booking.number_of_tickets).join(Booking, Guest.guest_id == Booking.guest_id).filter(Booking.event_id == event_id).all()
-
-        event_stats = {
-            "name": event.event_name,
-            "ticketsBooked": sum([booking.number_of_tickets for booking in bookings]),
-            "reviews": [{"review_text": review.review_text} for review in reviews],
-            "bookings": [{"guest_name": booking.gname, "number_of_tickets": booking.number_of_tickets} for booking in bookings]
-        }
-
-        return jsonify({"success": True, "event_stats": event_stats})
+    
 
     @app.route('/profile')
     def user_profile():
@@ -354,7 +320,6 @@ def init_routes(app):
             if user:
                 UserType = "guest"
                 currentUser = user.gusername
-                currentUserLocation = user.glocation  # Store the location of the guest user
                 session['guest_id'] = user.guest_id  # Set guest_id in session
         elif user_type == "Organizer":
             user = Organizer.query.filter_by(ousername=username, opassword=password).first()
@@ -400,60 +365,6 @@ def init_routes(app):
         else:
             return jsonify({"success": False})
 
-    @app.route('/update_profile', methods=['POST'])
-    def update_profile():
-        global currentUser
-        data = request.json
-        if UserType == "guest":
-            user = Guest.query.filter_by(gusername=currentUser).first()
-            if user:
-                user.gname = data["name"]
-                user.gemail = data["email"]
-                user.gphone = data["phone"]
-                user.glocation = data["location"]  # New field for location
-        elif UserType == "organizer":
-            user = Organizer.query.filter_by(ousername=currentUser).first()
-            if user:
-                user.oname = data["name"]
-                user.oemail = data["email"]
-                user.ophone = data["phone"]
-                user.odescription = data["description"]
-        else:
-            return jsonify({"success": False})
-
-        if user:
-            db.session.commit()
-            return jsonify({"success": True})
-        else:
-            return jsonify({"success": False})
-
-    @app.route('/change_password', methods=['POST'])
-    def change_password():
-        global currentUser
-        data = request.json
-        current_password = data["current_password"]
-        new_password = data["new_password"]
-        confirm_password = data["confirm_password"]
-
-        if new_password != confirm_password:
-            return jsonify({"success": False, "message": "New passwords do not match."})
-
-        if UserType == "guest":
-            user = Guest.query.filter_by(gusername=currentUser, gpassword=current_password).first()
-            if user:
-                user.gpassword = new_password
-        elif UserType == "organizer":
-            user = Organizer.query.filter_by(ousername=currentUser, opassword=current_password).first()
-            if user:
-                user.opassword = new_password
-        else:
-            return jsonify({"success": False})
-
-        if user:
-            db.session.commit()
-            return jsonify({"success": True})
-        else:
-            return jsonify({"success": False, "message": "Current password is incorrect."})
 
     @app.route('/logout', methods=['POST'])
     def logout():
@@ -500,9 +411,8 @@ def init_routes(app):
     @app.route('/search_events', methods=['POST'])
     def search_events():
         query = request.form.get('query')
-        location_filter = currentUserLocation if currentUserLocation else ""
         if query:
-            events = Event.query.filter(Event.event_name.ilike(f'%{query}%'), Event.city == location_filter).all() if location_filter else Event.query.filter(Event.event_name.ilike(f'%{query}%')).all()
+            events = Event.query.filter(Event.event_name.ilike(f'%{query}%')).all()
             event_list = [
                 {
                     "event_id": event.event_id,
@@ -520,7 +430,7 @@ def init_routes(app):
     @app.route('/search_results')
     def search_results():
         query = request.args.get('query', '')
-        return render_template('search_result.html', query=query, isLoggedIn=isLoggedIn, currentUserLocation=currentUserLocation)
+        return render_template('search_result.html', query=query, isLoggedIn=isLoggedIn)
     
 
     @app.route('/create-payment-intent', methods=['POST'])
@@ -673,7 +583,7 @@ def init_routes(app):
             if payment and payment.status == 'succeeded':
                 payment_success = True
 
-        return render_template('booking_summary.html', isLoggedIn=isLoggedIn, currentUserLocation=currentUserLocation, payment_success=payment_success)
+        return render_template('booking_summary.html', isLoggedIn=isLoggedIn, payment_success=payment_success)
     
     
     @app.route('/api/booked_seats', methods=['GET'])
@@ -831,7 +741,7 @@ def init_routes(app):
     def add_event():
         if isLoggedIn and UserType == "organizer":
             organizer_id = session.get('organizer_id', None)
-            return render_template('add_event.html', organizer_id=organizer_id, currentUserLocation=currentUserLocation)
+            return render_template('add_event.html', organizer_id=organizer_id)
         else:
             return redirect(url_for('login'))
 

@@ -9,10 +9,4 @@ document.addEventListener("DOMContentLoaded", function() {
             alert('Please enter a search query.');
         }
     });
-
-    // Function to select location
-
-
-    // Set the location dropdown based on the currentUserLocation
-
 });

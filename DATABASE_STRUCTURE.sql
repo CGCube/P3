@@ -103,8 +103,9 @@ values ('admin', 'admin@example.com', 'password', '1234567890', 'Test Organizer'
 
 -- Insert test guests
 insert into guests (gname, gemail, gpassword, gphone, gusername, glocation)
-values ('Snehith', 'snehith@example.com', 'password', '0987654321', 'snehith', 'Hyderabad'), 
-       ('Gauri', 'gauri@example.com', 'password', '1234509876', 'gauri', 'Mumbai');
+values ('Snehith', 'snehith@example.com', 'Snehith@123', '0987654321', 'snehith', 'Hyderabad'), 
+       ('Abhinav', 'abhinav@example.com', 'Abhinav@123', '1234509876', 'abhinav', 'Mumbai');
+       ('Abhinav', 'wasifah@example.com', 'Wasifah@123', '1234509876', 'wasifah', 'Mumbai');
 
 -- Create a view to store guest bookings with event genres
 CREATE VIEW guest_genres AS
