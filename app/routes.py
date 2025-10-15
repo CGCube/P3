@@ -219,6 +219,10 @@ def init_routes(app):
 
         if not isLoggedIn:
             return redirect(url_for('login'))
+        
+        if UserType == "Organizer":
+            logout()
+            return redirect(url_for('login'))
 
         if request.method == 'POST':
             selected_seats = request.form.getlist('seats')
