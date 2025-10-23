@@ -1,11 +1,11 @@
 -- drop the database if it already exists
-drop database if exists eventnova;
+drop database if exists eventnova1;
 
 -- create the database
-create database eventnova;
+create database eventnova1;
 
 -- use the database
-use eventnova;
+use eventnova1;
 
 -- guests table
 create table guests (

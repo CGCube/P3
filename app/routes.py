@@ -6,11 +6,9 @@ import random
 from datetime import datetime
 import stripe
 from app.config import Config
-from moviepy import *
 from flask import send_from_directory
 
 from flask import jsonify, url_for
-from moviepy.editor import TextClip, concatenate_videoclips
 import os
 
 # Setting up logging
@@ -31,6 +29,33 @@ def generate_seat_labels(rows, cols):
             row_labels.append(f"{chr(65 + i)}{j}")
         labels.append(row_labels)
     return labels
+
+def serialize_events(events):
+        return [
+            {
+                "event_id": e.event_id,
+                "organizer_id": e.organizer_id,
+                "event_name": e.event_name,
+                "event_thumbnail": e.event_thumbnail,
+                "event_type": e.event_type,
+                "genre": e.genre,
+                "date": e.date.strftime('%Y-%m-%d'),
+                "time": e.time.strftime('%H:%M:%S'),
+                "venue": e.venue,
+                "city": e.city,
+                "price": float(e.price),
+                "available_seats": e.available_seats,
+                "event_description": e.event_description
+            }
+            for e in events
+        ]
+
+
+def get_events_by_type(event_type=None, limit=20):
+    query = Event.query
+    if event_type:
+        query = query.filter_by(event_type=event_type)
+    return query.order_by(db.func.random()).limit(limit).all()
 
 def init_routes(app):
 
@@ -67,152 +92,40 @@ def init_routes(app):
         events = Event.query.filter_by(event_type='movie').all()
         return render_template('movies.html', isLoggedIn=isLoggedIn, events=events)
 
+
     @app.route('/api/events')
     def api_events():
-        movies_query = Event.query.filter_by(event_type='movie')
-        shows_query = Event.query.filter_by(event_type='show')
-        events_query = Event.query.filter_by(event_type='event')
-        
-        movies = movies_query.order_by(db.func.random()).limit(4).all()
-        shows = shows_query.order_by(db.func.random()).limit(4).all()
-        events = events_query.order_by(db.func.random()).limit(4).all()
-        
+        movies = get_events_by_type('movie', 4)
+        shows = get_events_by_type('show', 4)
+        events = get_events_by_type('event', 4)
+
         events_list = {
-            "movies": [
-                {
-                    "event_id": event.event_id,
-                    "organizer_id": event.organizer_id,
-                    "event_name": event.event_name,
-                    "event_thumbnail": event.event_thumbnail,
-                    "event_type": event.event_type,
-                    "genre": event.genre,
-                    "date": event.date.strftime('%Y-%m-%d'),
-                    "time": event.time.strftime('%H:%M:%S'),
-                    "venue": event.venue,
-                    "city": event.city,
-                    "price": float(event.price),
-                    "available_seats": event.available_seats,
-                    "event_description": event.event_description
-                } for event in movies
-            ],
-            "shows": [
-                {
-                    "event_id": event.event_id,
-                    "organizer_id": event.organizer_id,
-                    "event_name": event.event_name,
-                    "event_thumbnail": event.event_thumbnail,
-                    "event_type": event.event_type,
-                    "genre": event.genre,
-                    "date": event.date.strftime('%Y-%m-%d'),
-                    "time": event.time.strftime('%H:%M:%S'),
-                    "venue": event.venue,
-                    "city": event.city,
-                    "price": float(event.price),
-                    "available_seats": event.available_seats,
-                    "event_description": event.event_description
-                } for event in shows
-            ],
-            "events": [
-                {
-                    "event_id": event.event_id,
-                    "organizer_id": event.organizer_id,
-                    "event_name": event.event_name,
-                    "event_thumbnail": event.event_thumbnail,
-                    "event_type": event.event_type,
-                    "genre": event.genre,
-                    "date": event.date.strftime('%Y-%m-%d'),
-                    "time": event.time.strftime('%H:%M:%S'),
-                    "venue": event.venue,
-                    "city": event.city,
-                    "price": float(event.price),
-                    "available_seats": event.available_seats,
-                    "event_description": event.event_description
-                } for event in events
-            ]
+            "movies": serialize_events(movies),
+            "shows": serialize_events(shows),
+            "events": serialize_events(events)
         }
+
         return jsonify({"success": True, "events": events_list})
 
-    @app.route('/api/shows')
-    def api_shows():
-        shows_query = Event.query.filter_by(event_type='show')
-        
-        shows = shows_query.order_by(db.func.random()).limit(20).all()
-        
-        shows_list = [
-            {
-                "event_id": event.event_id,
-                "organizer_id": event.organizer_id,
-                "event_name": event.event_name,
-                "event_thumbnail": event.event_thumbnail,
-                "event_type": event.event_type,
-                "genre": event.genre,
-                "date": event.date.strftime('%Y-%m-%d'),
-                "time": event.time.strftime('%H:%M:%S'),
-                "venue": event.venue,
-                "city": event.city,
-                "price": float(event.price),
-                "available_seats": event.available_seats,
-                "event_description": event.event_description
-            } for event in shows
-        ]
-        return jsonify({"success": True, "shows": shows_list})
 
     @app.route('/api/movies')
     def api_movies():
-        movies_query = Event.query.filter_by(event_type='movie')
-        
-        movies = movies_query.order_by(db.func.random()).limit(20).all()
-        
-        movies_list = [
-            {
-                "event_id": event.event_id,
-                "organizer_id": event.organizer_id,
-                "event_name": event.event_name,
-                "event_thumbnail": event.event_thumbnail,
-                "event_type": event.event_type,
-                "genre": event.genre,
-                "date": event.date.strftime('%Y-%m-%d'),
-                "time": event.time.strftime('%H:%M:%S'),
-                "venue": event.venue,
-                "city": event.city,
-                "price": float(event.price),
-                "available_seats": event.available_seats,
-                "event_description": event.event_description
-            } for event in movies
-        ]
-        return jsonify({"success": True, "movies": movies_list})
+        movies = get_events_by_type('movie', 20)
+        return jsonify({"success": True, "movies": serialize_events(movies)})
+
+
+    @app.route('/api/shows')
+    def api_shows():
+        shows = get_events_by_type('show', 20)
+        return jsonify({"success": True, "shows": serialize_events(shows)})
     
     @app.route('/view_description')
     def view_description():
         event_id = request.args.get('event_id')
         event = Event.query.get(event_id)
-        reviews = Review.query.filter_by(event_id=event_id).all()
-        return render_template('view_description.html', event=event, reviews=reviews, isLoggedIn=isLoggedIn)
+        return render_template('view_description.html', event=event, isLoggedIn=isLoggedIn)
 
-    @app.route('/submit_review', methods=['POST'])
-    def submit_review():
-        if not isLoggedIn:
-            return jsonify({"success": False, "message": "User not logged in"})
-
-        event_id = request.form.get('event_id')
-        rating = request.form.get('rating')
-        review_text = request.form.get('comment')
-        guest = Guest.query.filter_by(gusername=currentUser).first()
-
-        if not guest:
-            return jsonify({"success": False, "message": "Guest not found"})
-
-        new_review = Review(
-            event_id=event_id,
-            guest_id=guest.guest_id,
-            rating=rating,
-            review_text=review_text,
-            review_timestamp=datetime.now()
-        )
-        db.session.add(new_review)
-        db.session.commit()
-
-        return jsonify({"success": True, "message": "Review submitted successfully"})
+    
 
     @app.route('/select_seats', methods=['GET', 'POST'])
     def select_seats():
@@ -226,30 +139,28 @@ def init_routes(app):
 
         if request.method == 'POST':
             selected_seats = request.form.getlist('seats')
-            event_id = request.form.get('event_id')  # Get event_id from form
-            return redirect(url_for('booking_confirmation', seats=','.join(selected_seats), event_id=event_id))  # Pass event_id in URL
+            event_id = request.form.get('event_id')
+            return redirect(url_for('booking_confirmation', seats=','.join(selected_seats), event_id=event_id))
 
         event_id = request.args.get('event_id')
         if not event_id:
             logger.error('Event ID is missing in the URL.')
-            return redirect(url_for('home'))  # Redirect to home or an appropriate page if event_id is missing
+            return redirect(url_for('home'))
 
-        # Fetch booked seats for the event
         booked_seat_numbers = db.session.query(Seat.seat_number).filter(Seat.event_id == event_id).all()
-        booked_seat_numbers = [seat[0] for seat in booked_seat_numbers]  # Unpack tuples
-        logger.info('Fetched Booked Seat Numbers: %s', booked_seat_numbers)  # Debugging line
+        booked_seat_numbers = [seat[0] for seat in booked_seat_numbers]
+        logger.info('Fetched Booked Seat Numbers: %s', booked_seat_numbers)
 
-        guest_id = session.get('guest_id')  # Replace with actual guest_id from session or context
+        guest_id = session.get('guest_id')
         if guest_id is None:
             logger.error('Guest ID is not available in the session.')
-            return redirect(url_for('login'))  # Redirect to login if guest_id is not available
+            return redirect(url_for('login'))
 
-        seat_labels = generate_seat_labels(10, 20)  # Example seat labels, replace with actual logic
-        selected_seats = []  # Example selected seats
+        seat_labels = generate_seat_labels(10, 20)
+        selected_seats = []
 
         return render_template('seat_selection.html', isLoggedIn=True, event_id=event_id, guest_id=guest_id, booked_seat_numbers=booked_seat_numbers, seat_labels=seat_labels, selected_seats=selected_seats)
 
-    
 
     @app.route('/profile')
     def user_profile():
@@ -268,11 +179,11 @@ def init_routes(app):
         if not isLoggedIn:
             return redirect(url_for('login'))
         
-        seats = request.args.get('seats', '')  # Get selected seats from query parameters
+        seats = request.args.get('seats', '')
         seat_list = seats.split(',') if seats else []
-        event_id = request.args.get('event_id')  # Get event_id from query parameters
-        event = Event.query.get(event_id)  # Fetch event details from database
-        price_per_seat = event.price if event else 0  # Get price from event
+        event_id = request.args.get('event_id')
+        event = Event.query.get(event_id)
+        price_per_seat = event.price if event else 0
         total_amount = price_per_seat * len(seat_list)
         return render_template('booking_confirmation.html', isLoggedIn=True, seats=seat_list, price_per_seat=price_per_seat, total_amount=total_amount)
 
@@ -283,7 +194,7 @@ def init_routes(app):
         gpassword = request.form.get('gpassword')
         gusername = request.form.get('gusername')
         gphone = request.form.get('gphone')
-        glocation = request.form.get('glocation')  # New field for location
+        glocation = request.form.get('glocation')
 
         new_guest = Guest(gname=gname, gemail=gemail, gpassword=gpassword, gusername=gusername, gphone=gphone)
         db.session.add(new_guest)
@@ -310,7 +221,7 @@ def init_routes(app):
 
     @app.route('/submit_login', methods=['POST'])
     def submit_login():
-        global isLoggedIn, UserType, currentUser, currentUserLocation  # Added currentUserLocation
+        global isLoggedIn, UserType, currentUser, currentUserLocation
 
         username = request.form.get('username')
         password = request.form.get('password')
@@ -324,14 +235,14 @@ def init_routes(app):
             if user:
                 UserType = "guest"
                 currentUser = user.gusername
-                session['guest_id'] = user.guest_id  # Set guest_id in session
+                session['guest_id'] = user.guest_id
         elif user_type == "Organizer":
             user = Organizer.query.filter_by(ousername=username, opassword=password).first()
             logging.debug(f"Organizer user found: {user}")
             if user:
                 UserType = "organizer"
                 currentUser = user.ousername
-                session['organizer_id'] = user.organizer_id  # Set organizer_id in session
+                session['organizer_id'] = user.organizer_id
         else:
             return jsonify({"success": False})
 
@@ -363,7 +274,7 @@ def init_routes(app):
                 "email": user.gemail if UserType == "guest" else user.oemail,
                 "phone": user.gphone if UserType == "guest" else user.ophone,
                 "description": user.odescription if UserType == "organizer" else None,
-                "location": user.glocation if UserType == "guest" else None  # New field for location
+                "location": user.glocation if UserType == "guest" else None
             }
             return jsonify({"success": True, "profile": profile})
         else:
@@ -372,22 +283,12 @@ def init_routes(app):
 
     @app.route('/logout', methods=['POST'])
     def logout():
-        global isLoggedIn, UserType, currentUser, currentUserLocation  # Added currentUserLocation
+        global isLoggedIn, UserType, currentUser, currentUserLocation
         isLoggedIn = False
         UserType = ""
         currentUser = None
         currentUserLocation = None  # Reset the location
         return jsonify({"success": True})
-
-    @app.route('/get_order_history')
-    def get_order_history():
-        orders = [
-            {"type": "Movie", "name": "Avengers: Endgame", "date": "2023-01-15"},
-            {"type": "Event", "name": "Music Concert", "date": "2023-03-10"},
-            {"type": "Show", "name": "Comedy Night", "date": "2023-04-05"}
-        ]
-        return jsonify({"success": True, "orders": orders})
-
 
     @app.route('/api/event/<int:event_id>')
     def api_event(event_id):
@@ -412,20 +313,19 @@ def init_routes(app):
         else:
             return jsonify({"success": False, "status_message": "Event not found"})
 
-    @app.route('/search_events', methods=['POST'])
+    @app.route('/search_events', methods=['GET', 'POST'])
     def search_events():
-        query = request.form.get('query')
+        query = request.form.get('query') or request.args.get('query')
         if query:
             events = Event.query.filter(Event.event_name.ilike(f'%{query}%')).all()
             event_list = [
                 {
-                    "event_id": event.event_id,
-                    "event_name": event.event_name,
-                    "event_description": event.event_description,
-                    "event_type": event.event_type,
-                    "thumbnail": event.event_thumbnail
-                }
-                for event in events
+                    "event_id": e.event_id,
+                    "event_name": e.event_name,
+                    "event_description": e.event_description,
+                    "event_type": e.event_type,
+                    "thumbnail": e.event_thumbnail
+                } for e in events
             ]
             return jsonify(events=event_list)
         return jsonify(events=[])
@@ -463,27 +363,22 @@ def init_routes(app):
         total_amount = data.get("total_amount")
 
         try:
-            # Log the seats array to verify its contents
             logger.debug(f"Seats array before processing: {seats}")
 
-            # Clean the seats array to ensure no extraneous characters
             cleaned_seats = [seat.strip("[]'\" ") for seat in seats]
             logger.debug(f"Seats array after cleaning: {cleaned_seats}")
 
-            # Retrieve the payment intent to get the amount and currency
             intent = stripe.PaymentIntent.retrieve(payment_intent_id)
 
             if intent.status != 'succeeded':
                 logger.error("Payment was not successful.")
                 return jsonify({"success": False, "error": "Payment was not successful."})
 
-            # Assuming user is logged in and we have guest_id
             guest_id = session.get('guest_id')
 
             if not guest_id:
                 return jsonify({"success": False, "error": "Guest not logged in."})
 
-            # Create a new booking
             booking = Booking(
                 guest_id=guest_id,
                 event_id=event_id,
@@ -493,23 +388,20 @@ def init_routes(app):
             db.session.add(booking)
             db.session.commit()
 
-            # Create a new payment record
             payment = Payment(
                 guest_id=guest_id,
                 booking_id=booking.booking_id,
                 stripe_payment_id=payment_intent_id,
-                amount=intent.amount / 100,  # Convert cents to dollars
+                amount=intent.amount / 100,
                 currency=intent.currency,
                 status=intent.status
             )
             db.session.add(payment)
 
-            # Update available seats in the event
             event = Event.query.get(event_id)
             event.available_seats -= len(cleaned_seats)
             db.session.add(event)
 
-            # Create seat records for each seat
             for seat in cleaned_seats:
                 seat_record = Seat(
                     guest_id=guest_id,
@@ -538,29 +430,24 @@ def init_routes(app):
             return jsonify({"success": False, "error": "Missing payment_intent parameter"}), 400
 
         try:
-            # Retrieve the payment record
             payment = Payment.query.filter_by(stripe_payment_id=payment_intent_id).first()
             if not payment:
                 logger.error("Payment not found")
                 return jsonify({"success": False, "error": "Payment not found"}), 404
 
-            # Retrieve the booking record
             booking = Booking.query.get(payment.booking_id)
             if not booking:
                 logger.error("Booking not found")
                 return jsonify({"success": False, "error": "Booking not found"}), 404
 
-            # Retrieve the event record
             event = Event.query.get(booking.event_id)
             if not event:
                 logger.error("Event not found")
                 return jsonify({"success": False, "error": "Event not found"}), 404
 
-            # Retrieve the seat records
             seats = Seat.query.filter_by(booking_id=booking.booking_id).all()
             seat_numbers = [seat.seat_number for seat in seats]
 
-            # Prepare the response data
             response_data = {
                 "success": True,
                 "event_name": event.event_name,

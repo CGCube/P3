@@ -14,7 +14,6 @@ class Guest(db.Model):
     bookings = db.relationship('Booking', back_populates='guest')
     payments = db.relationship('Payment', back_populates='guest')
     seats = db.relationship('Seat', back_populates='guest')
-    reviews = db.relationship('Review', back_populates='guest')
 
 
 class Organizer(db.Model):
@@ -49,7 +48,6 @@ class Event(db.Model):
     organizer = db.relationship('Organizer', back_populates='events')
     bookings = db.relationship('Booking', back_populates='event')
     seats = db.relationship('Seat', back_populates='event')
-    reviews = db.relationship('Review', back_populates='event')
 
 
 class Booking(db.Model):
@@ -92,26 +90,3 @@ class Seat(db.Model):
     guest = db.relationship('Guest', back_populates='seats')
     booking = db.relationship('Booking', back_populates='seats')
     event = db.relationship('Event', back_populates='seats')
-
-
-class Review(db.Model):
-    __tablename__ = 'reviews'
-    review_id = db.Column(db.Integer, primary_key=True)
-    event_id = db.Column(db.Integer, db.ForeignKey('events.event_id'), nullable=False)
-    guest_id = db.Column(db.Integer, db.ForeignKey('guests.guest_id'), nullable=False)
-    rating = db.Column(db.SmallInteger, nullable=False)
-    review_text = db.Column(db.Text, nullable=False)
-    review_timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-    event = db.relationship('Event', back_populates='reviews')
-    guest = db.relationship('Guest', back_populates='reviews')
-
-
-class GuestGenre(db.Model):
-    __tablename__ = 'guest_genres'
-    guest_username = db.Column(db.String(100), primary_key=True)
-    event_id = db.Column(db.Integer, primary_key=True)
-    genre = db.Column(db.String(150), nullable=False)
-
-    def __repr__(self):
-        return f'<GuestGenre guest_username={self.guest_username} event_id={self.event_id} genre={self.genre}>'
